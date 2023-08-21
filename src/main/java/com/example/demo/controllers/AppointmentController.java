@@ -25,6 +25,7 @@ public class AppointmentController {
     @Autowired
     AppointmentRepository appointmentRepository;
 
+    // all appointments
     @GetMapping("/appointments")
     public ResponseEntity<List<Appointment>> getAllAppointments() {
         List<Appointment> appointments = new ArrayList<>();
@@ -38,6 +39,7 @@ public class AppointmentController {
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
+    // One appointment
     @GetMapping("/appointments/{id}")
     public ResponseEntity<Appointment> getAppointmentById(@PathVariable("id") long id) {
         Optional<Appointment> appointment = appointmentRepository.findById(id);
@@ -49,6 +51,7 @@ public class AppointmentController {
         }
     }
 
+    // Create an appointment
     @PostMapping("/appointment")
     public ResponseEntity<List<Appointment>> createAppointment(@RequestBody Appointment appointment) {
         // POST: /api/appointment
@@ -72,6 +75,7 @@ public class AppointmentController {
         }
     }
 
+    // Delete one appointment
     @DeleteMapping("/appointments/{id}")
     public ResponseEntity<HttpStatus> deleteAppointment(@PathVariable("id") long id) {
 
@@ -87,6 +91,7 @@ public class AppointmentController {
 
     }
 
+    // Deleten all appointmens
     @DeleteMapping("/appointments")
     public ResponseEntity<HttpStatus> deleteAllAppointments() {
         appointmentRepository.deleteAll();
