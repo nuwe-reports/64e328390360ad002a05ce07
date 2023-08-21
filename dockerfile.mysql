@@ -1,0 +1,11 @@
+# Utiliza una imagen base de MySQL
+FROM mysql:latest
+
+# Variables de entorno para configurar la base de datos
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=accwe-hospital
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=password
+
+# Copia scripts SQL para inicializar la base de datos
+COPY ./db-scripts/ /docker-entrypoint-initdb.d/

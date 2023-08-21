@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api")
 public class AppointmentController {
@@ -27,12 +26,12 @@ public class AppointmentController {
     AppointmentRepository appointmentRepository;
 
     @GetMapping("/appointments")
-    public ResponseEntity<List<Appointment>> getAllAppointments(){
+    public ResponseEntity<List<Appointment>> getAllAppointments() {
         List<Appointment> appointments = new ArrayList<>();
 
         appointmentRepository.findAll().forEach(appointments::add);
 
-        if (appointments.isEmpty()){
+        if (appointments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
@@ -40,43 +39,56 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointments/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable("id") long id){
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable("id") long id) {
         Optional<Appointment> appointment = appointmentRepository.findById(id);
 
-        if (appointment.isPresent()){
-            return new ResponseEntity<>(appointment.get(),HttpStatus.OK);
-        }else {
+        if (appointment.isPresent()) {
+            return new ResponseEntity<>(appointment.get(), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/appointment")
-    public ResponseEntity<List<Appointment>> createAppointment(@RequestBody Appointment appointment){
-        /** TODO 
-         * Implement this function, which acts as the POST /api/appointment endpoint.
-         * Make sure to check out the whole project. Specially the Appointment.java class
-         */
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+    public ResponseEntity<List<Appointment>> createAppointment(@RequestBody Appointment appointment) {
+        // POST: /api/appointment
+        try {
+            // Create appointment instance with the request body
+            Appointment newAppointment = new Appointment(
+                    appointment.getPatient(),
+                    appointment.getDoctor(),
+                    appointment.getRoom(),
+                    appointment.getStartsAt(),
+                    appointment.getFinishesAt());
+
+            // Save in db
+            Appointment savedAppointment = appointmentRepository.save(newAppointment);
+
+            // return the expected output
+            return ResponseEntity.status(HttpStatus.CREATED).body(List.of(savedAppointment));
+        } catch (Exception e) {
+            // handle exception
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-
     @DeleteMapping("/appointments/{id}")
-    public ResponseEntity<HttpStatus> deleteAppointment(@PathVariable("id") long id){
+    public ResponseEntity<HttpStatus> deleteAppointment(@PathVariable("id") long id) {
 
         Optional<Appointment> appointment = appointmentRepository.findById(id);
 
-        if (!appointment.isPresent()){
+        if (!appointment.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         appointmentRepository.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
-        
+
     }
 
     @DeleteMapping("/appointments")
-    public ResponseEntity<HttpStatus> deleteAllAppointments(){
+    public ResponseEntity<HttpStatus> deleteAllAppointments() {
         appointmentRepository.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
