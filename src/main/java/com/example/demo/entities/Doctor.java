@@ -6,6 +6,39 @@ import javax.persistence.*;
 @Table(name="doctors")
 public class Doctor extends Person {
 
+    @Override
+    public int getAge() {
+        return super.getAge();
+    }
+    @Override
+    public String getEmail() {
+        return super.getEmail();
+    }
+    @Override
+    public String getFirstName() {
+        return super.getFirstName();
+    }
+    @Override
+    public String getLastName() {
+        return super.getLastName();
+    }
+    @Override
+    public void setAge(int age) {
+        super.setAge(age);
+    }
+    @Override
+    public void setEmail(String email) {
+        super.setEmail(email);
+    }
+    @Override
+    public void setFirstName(String firstName) {
+        super.setFirstName(firstName);
+    }
+    @Override
+    public void setLastName(String lastName) {
+        super.setLastName(lastName);
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;

@@ -1,0 +1,24 @@
+# Utiliza una imagen base de Maven para compilar y empaquetar la aplicación
+FROM maven:3.8.4-openjdk-11 AS build
+
+# Copia el código fuente de la aplicación al contenedor
+COPY ./ /app
+WORKDIR /app
+
+# Ejecuta las pruebas
+RUN mvn clean test
+
+# Compila y empaqueta la aplicación
+RUN mvn clean package
+
+# Segunda etapa para ejecutar la aplicación
+FROM openjdk:11-jre-slim
+
+# Copia el archivo JAR compilado desde la etapa anterior
+COPY --from=build /app/target/accwe-hospital.jar /app.jar
+
+# Expone el puerto en el que escucha la aplicación
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+CMD ["java", "-jar", "/app.jar"]
